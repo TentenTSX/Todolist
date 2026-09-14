@@ -19,10 +19,7 @@ const normalizedConnectionString = connectionString
 
 const databaseClient = new Pool({
   connectionString: normalizedConnectionString,
-  ssl:
-    process.env.NODE_ENV === "production"
-      ? { rejectUnauthorized: false }
-      : undefined,
+  ssl: connectionString ? { rejectUnauthorized: false } : undefined,
   max: 5,
 });
 

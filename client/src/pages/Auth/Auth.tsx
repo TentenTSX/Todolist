@@ -159,7 +159,7 @@ function Auth({ onLogin, onRegister }: AuthProps) {
             🌐 Google
           </a>
           <a
-            href="https://github.com/TentenTSX/Todolist/pull/9"
+            href="https://github.com/TentenTSX/Todolist"
             target="_blank"
             rel="noopener noreferrer"
             className="auth-card__social"
