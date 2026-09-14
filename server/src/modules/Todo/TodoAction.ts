@@ -1,12 +1,18 @@
 import type { RequestHandler } from "express";
 import TodoRepository from "./TodoRepository";
 
-const browse: RequestHandler = async (_req, res, next) => {
+const browse: RequestHandler = async (req, res, next) => {
   try {
     console.log("La route GET /api/todos a été appelée");
 
-    const todos = await TodoRepository.readAll();
-
+    if (!req.user) {
+      res.status(401).json({
+        message: "Non authentifié",
+      });
+      return;
+    }
+    const userId = req.user.id;
+    const todos = await TodoRepository.readByUserId(userId);
     console.log(todos);
 
     res.status(200).json(todos);
@@ -40,8 +46,14 @@ const add: RequestHandler = async (req, res, next) => {
 const remove: RequestHandler = async (req, res, next) => {
   try {
     const todoId = Number(req.params.id);
-    const affectedRows = await TodoRepository.delete(todoId);
-
+    if (!req.user) {
+      res.status(401).json({
+        message: "Non authentifié",
+      });
+      return;
+    }
+    const userId = req.user.id;
+    const affectedRows = await TodoRepository.delete(todoId, userId);
     if (affectedRows === 0) {
       res.status(404).json({ message: "Todo not found" });
     } else {
@@ -56,10 +68,21 @@ const update: RequestHandler = async (req, res, next) => {
   try {
     const { title, description } = req.body;
     const todoId = Number(req.params.id);
-    const affectedRows = await TodoRepository.update(todoId, {
-      title,
-      description,
-    });
+    if (!req.user) {
+      res.status(401).json({
+        message: "Non authentifié",
+      });
+      return;
+    }
+    const userId = req.user.id;
+    const affectedRows = await TodoRepository.update(
+      todoId,
+      {
+        title,
+        description,
+      },
+      userId,
+    );
     if (affectedRows === 0) {
       res.status(404).json({ message: "Todo not found" });
     } else {
@@ -73,9 +96,17 @@ const patch: RequestHandler = async (req, res, next) => {
   try {
     const { is_completed } = req.body;
     const todoId = Number(req.params.id);
+    if (!req.user) {
+      res.status(401).json({
+        message: "Non authentifié",
+      });
+      return;
+    }
+    const userId = req.user.id;
     const affectedRows = await TodoRepository.updateCompleted(
       todoId,
       is_completed,
+      userId,
     );
     if (affectedRows === 0) {
       res.status(404).json({ message: "Todo not found" });
