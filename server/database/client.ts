@@ -1,25 +1,29 @@
-// Get variables from .env file for database connection
-const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
+import { Pool } from "pg";
 
-// Create a connection pool to the database
-import mysql from "mysql2/promise";
+const connectionString = process.env.POSTGRES_URL;
 
-const client = mysql.createPool({
-  host: DB_HOST,
-  port: Number.parseInt(DB_PORT as string),
-  user: DB_USER,
-  password: DB_PASSWORD,
-  database: DB_NAME,
+if (!connectionString) {
+  console.warn("POSTGRES_URL n'est pas défini");
+}
+
+const normalizedConnectionString = connectionString
+  ? (() => {
+      const url = new URL(connectionString);
+      url.searchParams.delete("sslmode");
+      url.searchParams.delete("sslcert");
+      url.searchParams.delete("sslkey");
+      url.searchParams.delete("sslrootcert");
+      return url.toString();
+    })()
+  : undefined;
+
+const databaseClient = new Pool({
+  connectionString: normalizedConnectionString,
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : undefined,
+  max: 5,
 });
 
-// Ready to export
-export default client;
-
-// Types export
-import type { Pool, ResultSetHeader, RowDataPacket } from "mysql2/promise";
-
-type DatabaseClient = Pool;
-type Result = ResultSetHeader;
-type Rows = RowDataPacket[];
-
-export type { DatabaseClient, Result, Rows };
+export default databaseClient;

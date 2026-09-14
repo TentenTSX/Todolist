@@ -9,7 +9,8 @@ class ApiFetchError extends Error {
 
 const ApiFetch = async (endpoint: string, options: RequestInit = {}) => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}${endpoint}`, {
+    const apiUrl = import.meta.env.VITE_API_URL ?? "";
+    const response = await fetch(`${apiUrl}${endpoint}`, {
       credentials: "include",
       ...options,
     });
