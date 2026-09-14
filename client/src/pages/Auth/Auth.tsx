@@ -150,22 +150,24 @@ function Auth({ onLogin, onRegister }: AuthProps) {
           <span>ou</span>
         </div>
         <div className="auth-card__socials">
-          <button
+          <a
+            href="https://todolist-tententsx.vercel.app"
             type="button"
             onClick={() =>
               setError("La connexion Google n’est pas encore configurée.")
             }
           >
             🌐 Google
-          </button>
-          <button
+          </a>
+          <a
+            href="https://todolist-tententsx.vercel.app"
             type="button"
             onClick={() =>
               setError("La connexion GitHub n’est pas encore configurée.")
             }
           >
             🐙 GitHub
-          </button>
+          </a>
         </div>
         <p className="auth-card__signup">
           Pas de compte ?{" "}
