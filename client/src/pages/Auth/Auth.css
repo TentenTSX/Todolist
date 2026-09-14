@@ -242,14 +242,33 @@
       grid-template-columns: 1fr 1fr;
       gap: 0.75rem;
 
-      button {
+      .auth-card__social {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
         min-height: 3.2rem;
         color: #aaa5b8;
         font-weight: 700;
+        text-decoration: none;
         background: #26213e;
         border: 1px solid #49435c;
         border-radius: 0.85rem;
         cursor: pointer;
+        transition: color 150ms, border-color 150ms, background 150ms, transform
+          150ms;
+
+        &:hover {
+          color: #f9f7ff;
+          background: #30294b;
+          border-color: #a14bd2;
+          transform: translateY(-2px);
+        }
+
+        &:focus-visible {
+          outline: 3px solid rgba(181, 74, 239, 0.45);
+          outline-offset: 3px;
+        }
       }
     }
 
