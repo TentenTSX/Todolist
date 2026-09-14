@@ -150,10 +150,20 @@ function Auth({ onLogin, onRegister }: AuthProps) {
           <span>ou</span>
         </div>
         <div className="auth-card__socials">
-          <a href="https://todolist-tententsx.vercel.app" type="button">
+          <a
+            href="https://todolist-tententsx.vercel.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="auth-card__social"
+          >
             🌐 Google
           </a>
-          <a href="https://github.com/TentenTSX/Todolist/pull/9" type="button">
+          <a
+            href="https://github.com/TentenTSX/Todolist/pull/9"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="auth-card__social"
+          >
             🐙 GitHub
           </a>
         </div>
