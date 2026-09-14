@@ -52,9 +52,38 @@ express.urlencoded();
 // Uncomment one or more of these options depending on the format of the data sent by your client:
 
 import cookieParser from "cookie-parser";
+import databaseClient from "../database/client";
+import ensureSchema from "../database/ensureSchema";
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded());
+
+app.get("/api/health", async (_req, res) => {
+  if (!process.env.POSTGRES_URL) {
+    res.status(503).json({ status: "error", database: "not_configured" });
+    return;
+  }
+
+  try {
+    await databaseClient.query("SELECT 1");
+    res.json({ status: "ok", database: "connected" });
+  } catch (error) {
+    const code =
+      typeof error === "object" && error !== null && "code" in error
+        ? String(error.code)
+        : "connection_failed";
+    res.status(503).json({ status: "error", database: code });
+  }
+});
+
+app.use(async (_req, _res, next) => {
+  try {
+    await ensureSchema();
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 // app.use(express.text());
 // app.use(express.raw());
 

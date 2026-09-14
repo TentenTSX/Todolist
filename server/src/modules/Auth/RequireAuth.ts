@@ -5,7 +5,7 @@ const requireAuth: RequestHandler = (req, res, next) => {
   try {
     const token = req.cookies.token;
     if (!token) {
-      res.json({
+      res.status(401).json({
         message: "Non authentifié",
       });
       return;
